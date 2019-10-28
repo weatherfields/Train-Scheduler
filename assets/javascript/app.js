@@ -7,7 +7,7 @@ const firebaseConfig = {
     messagingSenderId: "685538040692",
     appId: "1:685538040692:web:e35a0fb29a56f26bc5aa21",
     measurementId: "G-HY99ZDF0H8"
-  };
+};
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
@@ -15,8 +15,8 @@ const firebaseConfig = {
   //reference the firebase database
 let database = firebase.database();
 
-// click function for submit button
 $(document).ready(function() {
+// click function for submit button
 $("#submit").on("click", function(event) {
     event.preventDefault();
 
@@ -26,6 +26,11 @@ let trainDestination = $("#destination-input").val().trim();
 let firstTrainTime = $("#first-train").val().trim();
 let FreqInput = $("#frequency-input").val().trim();
 
+// clears inputs
+$("#train-input").val("");
+$("#destination-input").val("");
+$("#first-train").val("");
+$("#frequency-input").val("");
 // new train info
 let trainInfo = {
     name: trainName,
@@ -35,17 +40,12 @@ let trainInfo = {
 };
 
 // push new train info to firebase, set would overwrite.
-database.ref("/NewTrain").push({
-    trainInfo
-});
-// clears inputs
-$("#train-input").val("");
-$("#destination-input").val("");
-$("#first-train").val("");
-$("#frequency-input").val("");
-
+database.ref().push(trainInfo);
 }); // end of click function
 
+database.ref().on("child_added", function(snapshot, prevChildKey){
+    let trainInfo = snapshot.val().trainInfo;
+})
 }); // endo of Jquery
 
  // var starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
