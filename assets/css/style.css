@@ -1,0 +1,44 @@
+@font-face {
+    font-family: RioGrande;
+    src: url("../fonts/RioGrande.ttf") format("truetype");
+}
+@font-face {
+    font-family: WEST____;
+    src: url("../fonts/WEST____.TTF") format("truetype");
+}
+body {
+    background-image: url(../images/ThomasbtmRight.jpg);
+    background-repeat: no-repeat;
+  background-size: cover;
+}
+.container-fluid {
+    max-width: 80%;
+}
+#cont2 {
+    float: left;
+    max-width: 40%;
+    margin-left: 10%;
+}
+#Head1 {
+    font-family: RioGrande, Georgia, 'Times New Roman', Times, serif;
+}
+#fun {
+    font-family: WEST____, Georgia, 'Times New Roman', Times, serif;
+    font-size: 3vw;
+    text-align: center;
+}
+
+h1 {
+    font-size: 5vw;
+    text-align: center;
+}
+
+.jumbotron {
+    padding: .7rem;
+    border-radius: 10pt;
+    border: 5pt double black;
+}
+.btn {
+    background-color: rgb(56, 56, 56);
+    border-color: rgb(56, 56, 56);
+}
