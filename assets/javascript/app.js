@@ -1,23 +1,23 @@
-// $(document).ready(function() {
-    var firebaseConfig = {
-        apiKey: "AIzaSyAs0su1SC9BoU5hKeYHpzeHMvz6fvxQSwQ",
-        authDomain: "train-scheduler-3d51f.firebaseapp.com",
-        databaseURL: "https://train-scheduler-3d51f.firebaseio.com",
-        projectId: "train-scheduler-3d51f",
-        storageBucket: "train-scheduler-3d51f.appspot.com",
-        messagingSenderId: "685538040692",
-        appId: "1:685538040692:web:e35a0fb29a56f26bc5aa21"
-        // measurementId: "G-HY99ZDF0H8"
-      };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  
-console.log(firebase.database());
-  //reference the firebase database
-var database = firebase.database();
+const firebaseConfig = {
+    apiKey: "AIzaSyAs0su1SC9BoU5hKeYHpzeHMvz6fvxQSwQ",
+    authDomain: "train-scheduler-3d51f.firebaseapp.com",
+    databaseURL: "https://train-scheduler-3d51f.firebaseio.com",
+    projectId: "train-scheduler-3d51f",
+    storageBucket: "train-scheduler-3d51f.appspot.com",
+    messagingSenderId: "685538040692",
+    appId: "1:685538040692:web:e35a0fb29a56f26bc5aa21"
+    // measurementId: "G-HY99ZDF0H8"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// console.log(firebase.database());
+//reference the firebase database
+const database = firebase.database();
 // let trainSchedule = database.ref("/trainschedule");
 
 // click function for submit button
+$(document).ready(function() {
 $("#add-train").on("click", function(event) {
     event.preventDefault();
 
@@ -37,10 +37,10 @@ let trainInfo = {
 // push new train info to firebase, set would overwrite.
 database.ref().push(trainInfo);
 
-console.log("train name", trainInfo.name);
-console.log("train destination", trainInfo.destination);
-console.log("train first Train Time", trainInfo.firstTT);
-console.log("train frequency", trainInfo.frequency);
+// console.log("train name", trainInfo.name);
+// console.log("train destination", trainInfo.destination);
+// console.log("train first Train Time", trainInfo.firstTT);
+// console.log("train frequency", trainInfo.frequency);
 
 // clears inputs
 $("#train-input").val("");
@@ -56,26 +56,27 @@ $("#frequency-input").val("");
 
 // i need to create a child
 // hopefully add to html and firebase
-database.ref().on("child_added", function(childSnapshot, prevChildKey){
+database.ref().on("child_added", function(childSnapshot){
     
     
-    // let trainName = childSnapshot.val().name;
-    // let trainDestination = childSnapshot.val().destination;
-    // let firstTrainTime = childSnapshot.val().firstTT;
-    // let FreqInput = childSnapshot.val().frequency;
+    let trainName = childSnapshot.val().name;
+    let trainDestination = childSnapshot.val().destination;
+    let firstTrainTime = childSnapshot.val().firstTT;
+    let FreqInput = childSnapshot.val().frequency;
     
     // 
-    let trainInfo = snapshot.val().trainInfo;
-    let trainName = trainInfo.name;
-    let trainDestination = trainInfo.destination;
-    let firstTrainTime = trainInfo.firstTT;
-    let FreqInput = trainInfo.frequency;
+    // let trainInfo = snapshot.val().trainInfo;
+    // let trainName = trainInfo.name;
+    // let trainDestination = trainInfo.destination;
+    // let firstTrainTime = trainInfo.firstTT;
+    // let FreqInput = trainInfo.frequency;
     
     // some sort of function involving moment.js???
+    // moment(moment().add(1, 'days')).format('DD/MM/YYY')
     
-    $("#tschedule-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + firstTrainTime + "</td><td>" + FreqInput + "</td></tr>");
+    $("#tschedule-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + firstTrainTime + "</td><td>" + FreqInput + "</td><td>" + nextArrival + "</td><td>" + minutesAway + "</td></tr>");
 });
-// });
+});
  
 
  // var starCountRef = firebase.database().ref('posts/' + postId + '/starCount');
