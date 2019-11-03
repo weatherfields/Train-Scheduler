@@ -11,73 +11,60 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// console.log(firebase.database());
 //reference the firebase database
 const database = firebase.database();
 // let trainSchedule = database.ref("/trainschedule");
 
-
+// just to make sure moment.js is working.
+let timeNow = moment().format("MMMM Do YYYY, h:mm a");
+// console.log(timeNow);
 // click function for submit button
 $(document).ready(function() {
-    $("#add-train").on("click", function() {
+    $("#add-train").on("click", function(event) {
         event.preventDefault();
         
         // variables for the input fields
         let trainName = $("#train-input").val().trim();
         let trainDestination = $("#destination-input").val().trim();
         let firstTrainTime = $("#first-train").val().trim();
-        let FreqInput = $("#frequency-input").val().trim();
+        // make string integer
+        let frequency = $("#frequency-input").val().trim();
+        // create the first train time to be 1 day prior:
+        let firstTTmoved = moment(firstTrainTime, "HH:mm").subtract(1, "days");
+        // to get the difference in minutes 
+        let ttDiff = moment().diff(moment(firstTTmoved), "minutes");
+        let timeModulo = ttDiff % frequency;
+        let minutesAway = frequency - timeModulo;
+        let nextArrival = moment().add(minutesAway, "minutes").format("hh:mm")
         
-        // new train info Object
-        let trainInfo = {
+        // push new train info to firebase.
+        database.ref().push({
             name: trainName,
             destination: trainDestination,
             firstTT: firstTrainTime,
-            frequency: FreqInput
-        };
-
-        // push new train info to firebase.
-        database.ref().push({
-            trainInfo,
+            frequency: frequency,
+            minutesAway: minutesAway,
+            nextArrival: nextArrival,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
             // TIMESTAMP: A placeholder value for auto-populating the current timestamp (since unix epoch).
             // ServerValue: a placeholder value container (is the way I understand it).
             // unixTime: firebase.database.ServerValue.TIMESTAMP // time since the Unix epoch, in milliseconds) as determined by the Firebase servers. https://firebase.google.com/docs/reference/js/firebase.database.ServerValue
-            dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
-        
         // clears inputs
         $("#train-input").val("");
         $("#destination-input").val("");
         $("#first-train").val("");
         $("#frequency-input").val("");
         
-         // don't refresh page
-        // $("input").val('');
-        // return false
-        
         }); 
         // end of click function
-        
-        
         // i need to create a child
-        // hopefully add to html and firebase
-        database.ref().on("child_added", function(childSnapshot){
-            
-            
-            let trainName = childSnapshot.val().name;
-            let trainDestination = childSnapshot.val().destination;
-            let firstTrainTime = childSnapshot.val().firstTT;
-            let FreqInput = childSnapshot.val().frequency;
-            
-            
-            // some sort of function involving moment.js
-            let timeNow = moment().format("MMMM Do YYYY, h:mm a");
-            console.log(timeNow);
-
-            
-            $("#tschedule-table > tbody").append("<tr><td>" + trainName + "</td><td>" + trainDestination + "</td><td>" + firstTrainTime + "</td><td>" + FreqInput + "</td></tr>");
+        // add to html
+        database.ref().on("child_added", function(childSnapshot){ 
+            $("#tschedule-table > tbody").append("<tr><td>" + childSnapshot.val().name + "</td><td>" + childSnapshot.val().destination + "</td><td>" + childSnapshot.val().frequency + "</td><td>" + childSnapshot.val().nextArrival + "</td><td>" + childSnapshot.val().minutesAway + "</td></tr>");
         });
     });
+    // Notes and code that I ended up replacing/rewriting
     // MOMENT.JS NOTES
     
     // (m.toString()); toString will display current date and time
@@ -156,3 +143,12 @@ $(document).ready(function() {
         // let trainDestination = trainInfo.destination;
         // let firstTrainTime = trainInfo.firstTT;
         // let FreqInput = trainInfo.frequency;
+
+        // let trainName = childSnapshot.val().name;
+        // let trainDestination = childSnapshot.val().destination;
+        // let firstTrainTime = childSnapshot.val().firstTT;
+        // let FreqInput = childSnapshot.val().frequency;
+// don't refresh page
+        // $("input").val('');
+        // return false
+// console.log(firebase.database());

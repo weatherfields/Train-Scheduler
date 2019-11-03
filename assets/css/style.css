@@ -9,7 +9,7 @@
 body {
     background-image: url(../images/ThomasbtmRight.jpg);
     background-repeat: no-repeat;
-  background-size: cover;
+    background-size: cover;
 }
 .container-fluid {
     max-width: 80%;
